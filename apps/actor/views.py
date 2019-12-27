@@ -1,4 +1,6 @@
 from django.http import Http404
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import OrderingFilter
 from rest_framework import generics
 from rest_framework import views
 from rest_framework.response import Response
@@ -19,6 +21,9 @@ from apps.film.serializers import FilmSerializer
 class ListActors(generics.ListAPIView):
     queryset = Actor.objects.all()
     serializer_class = ActorSerializer
+    filter_backends = (DjangoFilterBackend, OrderingFilter,)
+    ordering_fields = '__all__'
+    ordering = 'last_name'
 
 
 """
@@ -53,7 +58,7 @@ class FilmsOfTheActor(generics.ListAPIView):
     def get_queryset(self):
         # Gets the actor_id from URL params
         actor_id = self.kwargs['pk']
-        return Actor.objects.get(pk=actor_id).films
+        return Actor.objects.get(pk=actor_id).films.order_by('title')
 
 
 """

@@ -1,6 +1,8 @@
 from django.http import Http404
 from rest_framework import generics, views, status
 from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import OrderingFilter
 
 from apps.actor.models import Actor
 from apps.actor.serializers import ActorSerializer
@@ -18,6 +20,9 @@ from apps.film.serializers import FilmSerializer
 class ListFilms(generics.ListAPIView):
     queryset = Film.objects.all()
     serializer_class = FilmSerializer
+    filter_backends = (DjangoFilterBackend, OrderingFilter,)
+    ordering_fields = '__all__'
+    ordering = ['title']
 
 
 """
@@ -27,6 +32,7 @@ class ListFilms(generics.ListAPIView):
 
 
 class DetailFilm(views.APIView):
+
     @staticmethod
     def get_object(pk):
         try:
@@ -52,7 +58,7 @@ class ActorsOfTheFilm(generics.ListAPIView):
     def get_queryset(self):
         # Gets the Film_id from URL params
         film_id = self.kwargs['pk']
-        return Film.objects.get(pk=film_id).actor_set
+        return Film.objects.get(pk=film_id).actor_set.order_by('last_name')
 
 
 """
