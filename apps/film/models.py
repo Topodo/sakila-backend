@@ -12,9 +12,9 @@ class Film(models.Model):
     length = models.SmallIntegerField(blank=True, null=True)
     replacement_cost = models.DecimalField(max_digits=5, decimal_places=2)
     rating = models.TextField(blank=True, null=True)  # This field type is a guess.
-    last_update = models.DateTimeField()
+    last_update = models.DateTimeField(auto_now_add=True, blank=True)
     special_features = models.TextField(blank=True, null=True)  # This field type is a guess.
-    fulltext = models.TextField()  # This field type is a guess.
+    language_id = models.SmallIntegerField(default=1, blank=True)
 
     def __str__(self):
         return self.title

@@ -1,8 +1,7 @@
 from django.http import Http404
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import generics, views, status
 from rest_framework.filters import OrderingFilter
-from rest_framework import generics
-from rest_framework import views
 from rest_framework.response import Response
 
 from apps.actor.models import Actor
@@ -88,3 +87,18 @@ class BindFilmToActor(views.APIView):
         actor.films.add(film)
         serializer = ActorSerializer(actor)
         return Response(serializer.data)
+
+
+"""
+    /api/v1/actors/
+    POST Method that creates a new Actor
+"""
+
+
+class CreateActor(views.APIView):
+    def post(self, request, format=None):
+        serializer = ActorSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

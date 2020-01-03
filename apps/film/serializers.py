@@ -16,5 +16,4 @@ class FilmSerializer(ModelSerializer):
                   'replacement_cost',
                   'rating',
                   'last_update',
-                  'special_features',
-                  'fulltext']
+                  'special_features']

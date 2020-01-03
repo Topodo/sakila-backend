@@ -1,3 +1,5 @@
+import sys
+
 from django.http import Http404
 from rest_framework import generics, views, status
 from rest_framework.response import Response
@@ -88,3 +90,20 @@ class BindActorToFilm(views.APIView):
         film.actor_set.add(actor)
         serializer = FilmSerializer(film)
         return Response(serializer.data)
+
+
+"""
+    /api/v1/actors/
+    POST Method that creates a new Actor
+"""
+
+
+class CreateFilm(views.APIView):
+    def post(self, request, format=None):
+        serializer = FilmSerializer(data=request.data)
+        print(request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        print(serializer.errors)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
